@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#5B6CFF">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
+  <meta name="apple-mobile-web-app-title" content="单词卡">
+  <meta name="description" content="背单词：每日单词卡片、词典查询、生词本、间隔复习">
+  <link rel="manifest" href="manifest.webmanifest">
+  <link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
+  <link rel="icon" href="icons/icon-192.png" type="image/png">
+  <title>单词卡 · 背单词</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <header id="app-header">
+    <h1 id="header-title">背单词</h1>
+    <div id="header-sub" class="header-sub"></div>
+    <!-- 词典缓存进度 -->
+    <div id="dict-progress" class="dict-progress" hidden>
+      <div class="dict-progress-track"><div id="dict-progress-fill" class="dict-progress-fill"></div></div>
+      <div id="dict-progress-text" class="dict-progress-text">词典缓存中…</div>
+    </div>
+  </header>
+
+  <main id="app-main">
+    <!-- ===================== 背单词 ===================== -->
+    <section id="tab-study" class="tab active">
+      <!-- 今日任务总览 -->
+      <div id="study-overview">
+        <div class="progress-card">
+          <div class="progress-row">
+            <span id="study-progress-text">今日 0 / 0</span>
+            <span id="study-streak" class="streak-badge">🔥 0 天</span>
+          </div>
+          <div class="progress-bar"><div id="study-progress-fill" class="progress-fill"></div></div>
+          <div class="progress-row sub">
+            <span id="study-review-info"></span>
+            <span id="study-new-info"></span>
+          </div>
+        </div>
+        <button id="btn-start-study" class="btn btn-primary btn-big" hidden>开始今日学习</button>
+      </div>
+
+      <!-- 学习卡片 -->
+      <div id="study-card-wrap" hidden>
+        <div id="study-counter" class="study-counter"></div>
+        <div id="flashcard" class="flashcard">
+          <div class="flashcard-inner" id="flashcard-inner">
+            <div class="flashcard-face front">
+              <div id="card-word" class="card-word">word</div>
+              <div id="card-phonetic" class="card-phonetic">/fəˈnetɪk/</div>
+              <div class="tap-hint">轻触卡片查看释义</div>
+            </div>
+            <div class="flashcard-face back">
+              <div id="card-pos" class="card-pos"></div>
+              <div id="card-cn" class="card-cn"></div>
+              <div id="card-en" class="card-en"></div>
+              <div id="card-example" class="card-example"></div>
+            </div>
+          </div>
+        </div>
+        <div id="study-actions" class="study-actions" hidden>
+          <button id="btn-forgot" class="btn btn-soft-red">✗ 不认识</button>
+          <button id="btn-fuzzy" class="btn btn-soft-amber">？ 模糊</button>
+          <button id="btn-know" class="btn btn-soft-green">✓ 认识</button>
+        </div>
+      </div>
+
+      <!-- 今日完成 -->
+      <div id="study-done" hidden class="done-panel">
+        <div class="done-emoji">🎉</div>
+        <h2 id="done-title">今日学习完成！</h2>
+        <div class="done-stats">
+          <div class="done-stat"><span id="done-count">0</span><small>今日单词</small></div>
+          <div class="done-stat"><span id="done-streak">0</span><small>连续天数</small></div>
+          <div class="done-stat"><span id="done-total">0</span><small>累计单词</small></div>
+        </div>
+        <button id="btn-study-more" class="btn btn-primary btn-big">再学一轮新词</button>
+      </div>
+    </section>
+
+    <!-- ===================== 查词 ===================== -->
+    <section id="tab-lookup" class="tab">
+      <form id="lookup-form" class="search-box">
+        <input id="lookup-input" type="search" placeholder="输入西班牙语单词，如 hablar" autocomplete="off" spellcheck="false">
+        <button type="submit" class="btn btn-primary">查词</button>
+      </form>
+
+      <div id="lookup-result"></div>
+
+      <div id="lookup-empty" class="empty-tip">
+        <div class="empty-emoji">🔍</div>
+        <p>输入西班牙语单词查询：<br>内置词典即时返回词性与英文释义<br>查不到的单词会自动调用 AI 生成</p>
+      </div>
+    </section>
+
+    <!-- ===================== 生词本 ===================== -->
+    <section id="tab-saved" class="tab">
+      <div class="saved-toolbar">
+        <input id="saved-search" type="search" placeholder="搜索生词…" autocomplete="off">
+        <button id="btn-import-common" class="btn" title="导入 100 个最高频常用西语词">导入100词</button>
+        <button id="btn-saved-export" class="btn" title="导出列表">导出</button>
+        <button id="btn-add-word" class="btn btn-primary">＋ 添加</button>
+      </div>
+      <div id="saved-filters" class="chips">
+        <button class="chip active" data-filter="all">全部</button>
+        <button class="chip" data-filter="learning">学习中</button>
+        <button class="chip" data-filter="mastered">已掌握</button>
+      </div>
+      <div id="saved-list" class="word-list"></div>
+      <div id="saved-empty" class="empty-tip">
+        <div class="empty-emoji">📚</div>
+        <p>生词本还是空的<br>在「查词」中收藏单词，或在「背单词」中认识的单词会来到这里</p>
+      </div>
+    </section>
+
+    <!-- ===================== 统计 / 设置 ===================== -->
+    <section id="tab-stats" class="tab">
+      <div class="stats-grid">
+        <div class="stat-card"><span id="stat-today" class="stat-num">0</span><small>今日单词</small></div>
+        <div class="stat-card"><span id="stat-streak" class="stat-num">0</span><small>连续打卡</small></div>
+        <div class="stat-card"><span id="stat-week" class="stat-num">0</span><small>本周单词</small></div>
+        <div class="stat-card"><span id="stat-total" class="stat-num">0</span><small>累计学习</small></div>
+        <div class="stat-card"><span id="stat-saved" class="stat-num">0</span><small>生词本</small></div>
+        <div class="stat-card"><span id="stat-mastered" class="stat-num">0</span><small>已掌握</small></div>
+      </div>
+
+      <h2 class="section-title">学习设置</h2>
+      <div class="setting-group">
+        <label class="setting-row">
+          <span>每日新词数量</span>
+          <input id="set-daily" type="number" min="5" max="50" step="5" value="20">
+        </label>
+        <label class="setting-row">
+          <span>自定义词表优先</span>
+          <input id="set-custom-first" type="checkbox">
+        </label>
+      </div>
+
+      <h2 class="section-title">AI 生成（DeepSeek）</h2>
+      <div class="setting-group">
+        <label class="setting-row">
+          <span>启用 AI 兜底</span>
+          <input id="set-ai-enabled" type="checkbox" checked>
+        </label>
+        <label class="setting-row column">
+          <span>API Key（仅保存在本机浏览器）</span>
+          <input id="set-api-key" type="password" placeholder="sk-…" autocomplete="off">
+        </label>
+        <label class="setting-row column">
+          <span>API 地址（默认 DeepSeek 官方）</span>
+          <input id="set-api-base" type="url" placeholder="https://api.deepseek.com">
+        </label>
+        <label class="setting-row column">
+          <span>模型</span>
+          <select id="set-model">
+            <option value="deepseek-chat">deepseek-chat（推荐）</option>
+            <option value="deepseek-reasoner">deepseek-reasoner</option>
+          </select>
+        </label>
+        <div id="ai-status" class="hint"></div>
+      </div>
+
+      <h2 class="section-title">数据管理</h2>
+      <div class="setting-group row-buttons">
+        <button id="btn-export-backup" class="btn">导出备份</button>
+        <button id="btn-clear-data" class="btn btn-danger">清空学习数据</button>
+      </div>
+      <p class="hint" id="storage-hint"></p>
+    </section>
+  </main>
+
+  <nav id="tab-bar">
+    <button class="tab-btn active" data-tab="study">
+      <span class="tab-ico">📇</span><span>背单词</span>
+    </button>
+    <button class="tab-btn" data-tab="lookup">
+      <span class="tab-ico">🔍</span><span>查词</span>
+    </button>
+    <button class="tab-btn" data-tab="saved">
+      <span class="tab-ico">📚</span><span>生词本</span>
+    </button>
+    <button class="tab-btn" data-tab="stats">
+      <span class="tab-ico">📊</span><span>统计</span>
+    </button>
+  </nav>
+
+  <!-- 生词详情弹层 -->
+  <div id="detail-modal" class="modal" hidden>
+    <div class="modal-mask" data-close="1"></div>
+    <div class="modal-sheet">
+      <div id="detail-body"></div>
+      <div class="modal-actions">
+        <button id="btn-detail-delete" class="btn btn-danger">删除</button>
+        <button id="btn-detail-master" class="btn">标记已掌握</button>
+        <button class="btn btn-primary" data-close="1">关闭</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 添加生词弹层 -->
+  <div id="add-modal" class="modal" hidden>
+    <div class="modal-mask" data-close="1"></div>
+    <div class="modal-sheet">
+      <h3>添加生词</h3>
+      <textarea id="add-words-input" rows="6" placeholder="每行一个单词，如：&#10;abandon&#10;benevolent&#10;scrutinize"></textarea>
+      <div class="modal-actions">
+        <button id="btn-add-cancel" class="btn" data-close="1">取消</button>
+        <button id="btn-add-confirm" class="btn btn-primary">添加</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="toast" class="toast" hidden></div>
+
+  <script type="module" src="js/app.js"></script>
+</body>
+</html>

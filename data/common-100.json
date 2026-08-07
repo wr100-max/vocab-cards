@@ -1,0 +1,502 @@
+[
+ {
+  "word": "no",
+  "pos": "adv.",
+  "cn": "not；no；eh?, right?, isn't it? (used as a tag question, to emphasise what precedes, or to request that the listener express an opinion)"
+ },
+ {
+  "word": "es",
+  "pos": "v.",
+  "cn": "to be (essentially or identified as)；to be (in the passive voice sense)；to exist; to occur"
+ },
+ {
+  "word": "está",
+  "pos": "v.",
+  "cn": "to be (have a temporary or permanent location in space)；to be present；to be (denotes a copula, in a transient fashion)"
+ },
+ {
+  "word": "aquí",
+  "pos": "adv.",
+  "cn": "here (in the speaker's location)"
+ },
+ {
+  "word": "ha",
+  "pos": "n.",
+  "cn": "initialism of \"ácido hialurónico\""
+ },
+ {
+  "word": "muy",
+  "pos": "adv.",
+  "cn": "apocopic form of \"mucho\"; very"
+ },
+ {
+  "word": "así",
+  "pos": "adv.",
+  "cn": "like this; like that; as such; thus; so; thereby; this way, that way；used to express wishes of misfortune against someone, or to cast a spell"
+ },
+ {
+  "word": "hay",
+  "pos": "adv.",
+  "cn": "alternative form of \"ahí\"；alternative form of \"ay\""
+ },
+ {
+  "word": "estoy",
+  "pos": "v.",
+  "cn": "smart inflection of \"estar\"; am"
+ },
+ {
+  "word": "vamos",
+  "pos": "interj.",
+  "cn": "let's go!；come on! (not in the disbelief sense)；basically, in other words"
+ },
+ {
+  "word": "ser",
+  "pos": "v.",
+  "cn": "to be (essentially or identified as)；to be (in the passive voice sense)；to exist; to occur"
+ },
+ {
+  "word": "bueno",
+  "pos": "adj.",
+  "cn": "good (of good quality)；good (in a good state)；good (morally)"
+ },
+ {
+  "word": "fue",
+  "pos": "v.",
+  "cn": "to be (essentially or identified as)；to be (in the passive voice sense)；to exist; to occur"
+ },
+ {
+  "word": "tengo",
+  "pos": "v.",
+  "cn": "to have; to possess；to have; to possess; to be (a condition or quality)；to hold; to grasp"
+ },
+ {
+  "word": "era",
+  "pos": "n.",
+  "cn": "era, age；era；threshing floor"
+ },
+ {
+  "word": "tiene",
+  "pos": "v.",
+  "cn": "to have; to possess；to have; to possess; to be (a condition or quality)；to hold; to grasp"
+ },
+ {
+  "word": "sé",
+  "pos": "v.",
+  "cn": "smart inflection of \"saber\"；smart inflection of \"ser\"；inflection of \"saber\""
+ },
+ {
+  "word": "cómo",
+  "pos": "adv.",
+  "cn": "how?；sorry? what? (expressing surprise or asking to repeat)；how"
+ },
+ {
+  "word": "vez",
+  "pos": "n.",
+  "cn": "time, instance；place (in a queue)；turn (a chance to use (something) shared in sequence with others)"
+ },
+ {
+  "word": "estás",
+  "pos": "v.",
+  "cn": "to be (have a temporary or permanent location in space)；to be present；to be (denotes a copula, in a transient fashion)"
+ },
+ {
+  "word": "sólo",
+  "pos": "adv.",
+  "cn": "superseded spelling of \"solo\""
+ },
+ {
+  "word": "son",
+  "pos": "n.",
+  "cn": "tone (pleasant sound)；son (Afro-Cuban musical form)；musical composition in this form"
+ },
+ {
+  "word": "hacer",
+  "pos": "v.",
+  "cn": "to do, perform, execute, carry out；to make；in various expressions about the weather"
+ },
+ {
+  "word": "he",
+  "pos": "adv.",
+  "cn": "here is [+(suffixed) accusative or aquí or ahí or allí]；behold (+ aquí)；he; the Hebrew letter ה"
+ },
+ {
+  "word": "todos",
+  "pos": "determiner",
+  "cn": "all; every；each; every；everything"
+ },
+ {
+  "word": "puedo",
+  "pos": "v.",
+  "cn": "to be able to, can；to be familiar with something, or with someone's personality；power (the ability to coerce, influence or control)"
+ },
+ {
+  "word": "quiero",
+  "pos": "v.",
+  "cn": "to desire, to want, to want to；to love; to be fond of (usually used with people or personified objects)；would you ... ?"
+ },
+ {
+  "word": "gracias",
+  "pos": "interj.",
+  "cn": "thank you, thanks；thanks"
+ },
+ {
+  "word": "puede",
+  "pos": "interj.",
+  "cn": "it's possible; could be"
+ },
+ {
+  "word": "soy",
+  "pos": "v.",
+  "cn": "to be (essentially or identified as)；to be (in the passive voice sense)；to exist; to occur"
+ },
+ {
+  "word": "estaba",
+  "pos": "v.",
+  "cn": "to be (have a temporary or permanent location in space)；to be present；to be (denotes a copula, in a transient fashion)"
+ },
+ {
+  "word": "también",
+  "pos": "adv.",
+  "cn": "also, too, as well；so"
+ },
+ {
+  "word": "tiempo",
+  "pos": "n.",
+  "cn": "time；a while, period of time, long time, length of time, indeterminate amount of time；tense"
+ },
+ {
+  "word": "entonces",
+  "pos": "adv.",
+  "cn": "then, next, thereupon, at that time, at that point；then, therefore, so, thus; in that case"
+ },
+ {
+  "word": "creo",
+  "pos": "v.",
+  "cn": "to believe；to think, to believe, to reckon, to be of the opinion；to give credence to"
+ },
+ {
+  "word": "tienes",
+  "pos": "v.",
+  "cn": "to have; to possess；to have; to possess; to be (a condition or quality)；to hold; to grasp"
+ },
+ {
+  "word": "casa",
+  "pos": "n.",
+  "cn": "house"
+ },
+ {
+  "word": "voy",
+  "pos": "v.",
+  "cn": "to go (away from speaker and listener)；to be suitable or apt for its purpose, to match or suit well (of clothing)；to head towards or lead to a place away from the speaker"
+ },
+ {
+  "word": "sabes",
+  "pos": "interj.",
+  "cn": "you know? (rhetorical question)"
+ },
+ {
+  "word": "eres",
+  "pos": "v.",
+  "cn": "smart inflection of \"ser\"; you are"
+ },
+ {
+  "word": "verdad",
+  "pos": "n.",
+  "cn": "truth；fact；right"
+ },
+ {
+  "word": "solo",
+  "pos": "adj.",
+  "cn": "sole; one; only; single (unique)；lonely, lonesome；alone, by oneself"
+ },
+ {
+  "word": "nunca",
+  "pos": "adv.",
+  "cn": "never；ever"
+ },
+ {
+  "word": "años",
+  "pos": "n.",
+  "cn": "year；(a certain) age"
+ },
+ {
+  "word": "va",
+  "pos": "interj.",
+  "cn": "okay"
+ },
+ {
+  "word": "hola",
+  "pos": "interj.",
+  "cn": "hello, hi, hey"
+ },
+ {
+  "word": "mejor",
+  "pos": "adj.",
+  "cn": "better；better off；improved"
+ },
+ {
+  "word": "vida",
+  "pos": "n.",
+  "cn": "life；lifestyle；livelihood; living"
+ },
+ {
+  "word": "decir",
+  "pos": "v.",
+  "cn": "to say, to tell；to pronounce, sound out；to say, opine"
+ },
+ {
+  "word": "dónde",
+  "pos": "adv.",
+  "cn": "where?; in what place?；from where? whence?；where"
+ },
+ {
+  "word": "están",
+  "pos": "v.",
+  "cn": "to be (have a temporary or permanent location in space)；to be present；to be (denotes a copula, in a transient fashion)"
+ },
+ {
+  "word": "favor",
+  "pos": "n.",
+  "cn": "favor/favour"
+ },
+ {
+  "word": "señor",
+  "pos": "n.",
+  "cn": "mister, sir, lord (title conferred on a married or older male)；gentleman；master"
+ },
+ {
+  "word": "hombre",
+  "pos": "n.",
+  "cn": "man, (adult male human)；man, (all humans collectively); mankind, humankind；man, (individual of the species Homo sapiens, the genus Homo, or the subtribe Hominina)"
+ },
+ {
+  "word": "oh",
+  "pos": "interj.",
+  "cn": "oh (expression of awe, surprise, pain or realization)"
+ },
+ {
+  "word": "siempre",
+  "pos": "adv.",
+  "cn": "always；in spite of it, still...at least；all the same, ultimately, in the end"
+ },
+ {
+  "word": "ver",
+  "pos": "v.",
+  "cn": "to see, to spot；to see, to look at, to view (perceive)；to see, to tell, to observe"
+ },
+ {
+  "word": "quieres",
+  "pos": "v.",
+  "cn": "to desire, to want, to want to；to love; to be fond of (usually used with people or personified objects)；would you ... ?"
+ },
+ {
+  "word": "siento",
+  "pos": "v.",
+  "cn": "to feel；to regret, feel or be sorry；to hear"
+ },
+ {
+  "word": "había",
+  "pos": "v.",
+  "cn": "smart inflection of \"haber\"；makes pluperfect to verbs as part of the auxiliary verb haber"
+ },
+ {
+  "word": "dios",
+  "pos": "n.",
+  "cn": "god"
+ },
+ {
+  "word": "has",
+  "pos": "v.",
+  "cn": "have; forms the perfect aspect [+masculine singular past participle]；to hold, to possess；to exist; there be; “there is”, “there are” (hay); “there was”, “there were” (hubo​/​había)"
+ },
+ {
+  "word": "día",
+  "pos": "n.",
+  "cn": "day (any period of 24 hours)；day (a period from midnight to the following midnight)；day (rotational period of a planet)"
+ },
+ {
+  "word": "tenemos",
+  "pos": "v.",
+  "cn": "to have; to possess；to have; to possess; to be (a condition or quality)；to hold; to grasp"
+ },
+ {
+  "word": "cosas",
+  "pos": "n.",
+  "cn": "thing (object, concept)；thing (living being)"
+ },
+ {
+  "word": "otra",
+  "pos": "determiner",
+  "cn": "other, another；\"Not again!\" or \"What, again?\" (also Otra vez! or Otra vez?)；someone else; another person"
+ },
+ {
+  "word": "mismo",
+  "pos": "adj.",
+  "cn": "same; identical; one and the same; indicates that the two compared noun clauses both represent the one thing；similar; alike; practically identical; indicates that the two compared noun clauses have one or more matching qualities；self; emphasizes the identity or singularity of the modified noun phrase"
+ },
+ {
+  "word": "han",
+  "pos": "v.",
+  "cn": "have; forms the perfect aspect [+masculine singular past participle]；to hold, to possess；to exist; there be; “there is”, “there are” (hay); “there was”, “there were” (hubo​/​había)"
+ },
+ {
+  "word": "hecho",
+  "pos": "adj.",
+  "cn": "done, completed；made；fact"
+ },
+ {
+  "word": "puedes",
+  "pos": "v.",
+  "cn": "to be able to, can；to be familiar with something, or with someone's personality；power (the ability to coerce, influence or control)"
+ },
+ {
+  "word": "ahí",
+  "pos": "adv.",
+  "cn": "there (away from the speaker)；that (in certain phrases)"
+ },
+ {
+  "word": "dijo",
+  "pos": "v.",
+  "cn": "to say, to tell；to pronounce, sound out；to say, opine"
+ },
+ {
+  "word": "estar",
+  "pos": "v.",
+  "cn": "to be (have a temporary or permanent location in space)；to be present；to be (denotes a copula, in a transient fashion)"
+ },
+ {
+  "word": "noche",
+  "pos": "n.",
+  "cn": "night (the period between sunset and sunrise)；evening (after sunset)；after dark, (late) at night, nocturnally"
+ },
+ {
+  "word": "trabajo",
+  "pos": "n.",
+  "cn": "work, job；work；school assignment, often a presentation"
+ },
+ {
+  "word": "ir",
+  "pos": "v.",
+  "cn": "to go (away from speaker and listener)；to be suitable or apt for its purpose, to match or suit well (of clothing)；to head towards or lead to a place away from the speaker"
+ },
+ {
+  "word": "después",
+  "pos": "adv.",
+  "cn": "later, afterwards, afterward, post；next；after"
+ },
+ {
+  "word": "mis",
+  "pos": "determiner",
+  "cn": "apocopic form of \"mío\", my；mu; the Greek letter Μ, μ；mi"
+ },
+ {
+  "word": "sea",
+  "pos": "v.",
+  "cn": "to be (essentially or identified as)；to be (in the passive voice sense)；to exist; to occur"
+ },
+ {
+  "word": "acuerdo",
+  "pos": "n.",
+  "cn": "agreement；compromise"
+ },
+ {
+  "word": "parece",
+  "pos": "v.",
+  "cn": "to seem, to see fit；to look like, to seem like；to believe"
+ },
+ {
+  "word": "estamos",
+  "pos": "v.",
+  "cn": "to be (have a temporary or permanent location in space)；to be present；to be (denotes a copula, in a transient fashion)"
+ },
+ {
+  "word": "mundo",
+  "pos": "n.",
+  "cn": "world, earth (human collective existence)；world, globe (the Earth)；world (planet, especially one which is inhabitable)"
+ },
+ {
+  "word": "gente",
+  "pos": "n.",
+  "cn": "people；guys, lads (used to address a group of people)"
+ },
+ {
+  "word": "padre",
+  "pos": "n.",
+  "cn": "father, parent；father；team that often defeats another team"
+ },
+ {
+  "word": "estado",
+  "pos": "n.",
+  "cn": "country, land (any broad area or territory)；alternative case form of \"Estado\" (“state, a territory with a formally recognized sovereign government; administration, its government”)；state (a province, particularly a fairly autonomous one within a federation)"
+ },
+ {
+  "word": "parte",
+  "pos": "n.",
+  "cn": "part; section; portion; share; piece; bit; cut; proportion；place; somewhere；side"
+ },
+ {
+  "word": "sido",
+  "pos": "v.",
+  "cn": "to be (essentially or identified as)；to be (in the passive voice sense)；to exist; to occur"
+ },
+ {
+  "word": "momento",
+  "pos": "n.",
+  "cn": "moment, instant；timing；momentum"
+ },
+ {
+  "word": "podría",
+  "pos": "v.",
+  "cn": "to be able to, can；to be familiar with something, or with someone's personality；power (the ability to coerce, influence or control)"
+ },
+ {
+  "word": "mira",
+  "pos": "n.",
+  "cn": "target；purpose, object；sight (of a weapon)"
+ },
+ {
+  "word": "quiere",
+  "pos": "v.",
+  "cn": "to desire, to want, to want to；to love; to be fond of (usually used with people or personified objects)；would you ... ?"
+ },
+ {
+  "word": "fuera",
+  "pos": "adv.",
+  "cn": "outside；out；out!, get out!"
+ },
+ {
+  "word": "gran",
+  "pos": "adj.",
+  "cn": "apocopic form of \"grande\"; great, grand"
+ },
+ {
+  "word": "lugar",
+  "pos": "n.",
+  "cn": "place"
+ },
+ {
+  "word": "hablar",
+  "pos": "v.",
+  "cn": "to talk; to speak; to communicate using words；to speak (a language)；to talk or chat regularly with someone, especially on social media"
+ },
+ {
+  "word": "tener",
+  "pos": "v.",
+  "cn": "to have; to possess；to have; to possess; to be (a condition or quality)；to hold; to grasp"
+ },
+ {
+  "word": "tenía",
+  "pos": "v.",
+  "cn": "to have; to possess；to have; to possess; to be (a condition or quality)；to hold; to grasp"
+ },
+ {
+  "word": "nuevo",
+  "pos": "adj.",
+  "cn": "new；brand new, all-new；fresh"
+ },
+ {
+  "word": "pasa",
+  "pos": "n.",
+  "cn": "raisin"
+ }
+]

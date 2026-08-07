@@ -1,0 +1,9 @@
+{
+  "name": "vocab-cards",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "test": "node tests/core.test.mjs && node tests/dom.test.mjs",
+    "serve": "python3 dev_server.py 8000"
+  }
+}
