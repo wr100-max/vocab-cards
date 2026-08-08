@@ -113,17 +113,44 @@ export const db = {
     const all = await db.getAll("settings");
     const map = {};
     for (const { key, value } of all) map[key] = value;
-    return { ...DEFAULT_SETTINGS, ...map };
+    const merged = { ...DEFAULT_SETTINGS, ...map };
+    _settingsMirror = merged;
+    mirrorSync();
+    return merged;
   },
   async setSettings(patch) {
     for (const [key, value] of Object.entries(patch)) {
       await db.put("settings", { key, value });
     }
+    _settingsMirror = { ...(_settingsMirror || DEFAULT_SETTINGS), ...patch };
+    mirrorSync();
   },
   async clearSettings() {
     await db.clear("settings");
   },
 };
+
+// 设置的内存 + localStorage 镜像：供手势同步上下文（iOS TTS 要求）读取
+let _settingsMirror = null;
+
+function mirrorSync() {
+  try {
+    localStorage.setItem("vocab-settings", JSON.stringify(_settingsMirror || {}));
+  } catch { /* ignore */ }
+}
+
+/** 同步读取设置（无异步，供 iOS 手势内同步调用 TTS 使用） */
+export function getSettingsSync() {
+  if (_settingsMirror) return _settingsMirror;
+  try {
+    const raw = localStorage.getItem("vocab-settings");
+    if (raw) {
+      _settingsMirror = { ...DEFAULT_SETTINGS, ...JSON.parse(raw) };
+      return _settingsMirror;
+    }
+  } catch { /* ignore */ }
+  return { ...DEFAULT_SETTINGS };
+}
 
 export const DEFAULT_SETTINGS = {
   dailyCount: 20,          // 每日新词数

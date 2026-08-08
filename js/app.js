@@ -2,7 +2,7 @@
  * app.js — 入口：Service Worker 注册、Tab 路由、查词页
  * ============================================================ */
 
-import { db, DEFAULT_SETTINGS } from "./db.js";
+import { db, DEFAULT_SETTINGS, getSettingsSync } from "./db.js";
 import * as dict from "./dict.js";
 import * as study from "./study.js";
 import * as savedPage from "./saved.js";
@@ -105,12 +105,12 @@ async function cacheDictWithProgress() {
 /* ---------- 发音事件（全局委托） ---------- */
 
 function bindAudio() {
-  document.addEventListener("click", async (e) => {
+  document.addEventListener("click", (e) => {
     const btn = e.target.closest("[data-speak]");
     if (!btn || !btn.dataset.speak) return;
     e.stopPropagation(); // 不触发卡片翻面
-    const settings = await db.getSettings();
-    const ok = speak(btn.dataset.speak, { rate: settings.rate || 1 });
+    // 同步调用 speak（iOS 要求手势同步栈内发声），语速走内存镜像，无异步
+    const ok = speak(btn.dataset.speak, { rate: getSettingsSync().rate || 1 });
     if (!ok) {
       toast("当前设备不支持发音");
     } else if (!hasSpanishVoice() && !voiceHintShown) {

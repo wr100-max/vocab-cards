@@ -4,7 +4,7 @@
  *       → 模糊/不认识当天重学并进入间隔复习队列 → 全部完成打卡
  * ============================================================ */
 
-import { db } from "./db.js";
+import { db, getSettingsSync } from "./db.js";
 import * as dict from "./dict.js";
 import { todayStr, nextReview, needsReview, calcStreak, buildDailyQueue, shuffle } from "./core.js";
 import { getEntry, aiEnrich, toast, $, esc } from "./ui.js";
@@ -159,9 +159,9 @@ export function flipCard() {
   }
 }
 
-/** 设置开启"翻面自动朗读"时朗读当前内容 */
-async function autoSpeak(word) {
-  const settings = await db.getSettings();
+/** 设置开启"翻面自动朗读"时朗读当前内容（同步读设置，保证在翻卡手势内发声） */
+function autoSpeak(word) {
+  const settings = getSettingsSync();
   if (!settings.autoSpeak) return;
   const entry = state.curEntry;
   const text = entry?.ex ? `${word}. ${entry.ex}` : word;
