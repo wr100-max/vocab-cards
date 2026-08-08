@@ -1,7 +1,7 @@
 /* Service Worker：缓存应用外壳，支持离线使用。
  * 词典数据（3.5MB）由页面层主动缓存并显示进度（js/dict.js ensureDictCached），
  * SW 只负责外壳，安装快、不易被 iOS 中断。 */
-const VERSION = "vocab-v15" // v15：修复拼写确认按钮（漏 export）; // v13：防御性事件绑定（新旧缓存混合期不中断）
+const VERSION = "vocab-v16"; // v16：SW 更新后自动刷新页面（一次打开即更新到位）
 
 const APP_SHELL = [
   "./",
@@ -45,6 +45,12 @@ self.addEventListener("activate", (e) => {
     caches.keys()
       .then((keys) => Promise.all(keys.filter((k) => k !== VERSION).map((k) => caches.delete(k))))
       .then(() => self.clients.claim())
+      // 新版本激活后自动刷新所有受控页面：一次打开即加载新版本，无需手动多次刷新
+      .then(() =>
+        self.clients.matchAll({ type: "window" }).then((clients) => {
+          clients.forEach((c) => c.navigate(c.url).catch(() => {}));
+        })
+      )
   );
 });
 
