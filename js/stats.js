@@ -13,6 +13,7 @@ export async function initStats() {
   settings = await db.getSettings();
   // 填充表单
   $("set-daily").value = settings.dailyCount;
+  $("set-quiz-mode").checked = settings.quizMode !== false;
   $("set-custom-first").checked = !!settings.customFirst;
   $("set-ai-enabled").checked = settings.aiEnabled !== false;
   $("set-api-key").value = settings.apiKey || "";
@@ -35,6 +36,10 @@ function bindEvents() {
     $("set-daily").value = v;
     save("dailyCount", v);
     toast(`每日新词数已设为 ${v}`);
+  });
+  $("set-quiz-mode").addEventListener("change", (e) => {
+    save("quizMode", e.target.checked);
+    toast(e.target.checked ? "已切换为互动答题模式" : "已切换为经典翻卡模式");
   });
   $("set-custom-first").addEventListener("change", (e) => save("customFirst", e.target.checked));
   $("set-ai-enabled").addEventListener("change", (e) => {

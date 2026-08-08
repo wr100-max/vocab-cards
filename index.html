@@ -47,6 +47,27 @@
       <!-- 学习卡片 -->
       <div id="study-card-wrap" hidden>
         <div id="study-counter" class="study-counter"></div>
+
+        <!-- 互动答题面板（互动模式） -->
+        <div id="quiz-panel" hidden>
+          <div id="quiz-type" class="quiz-type"></div>
+          <div class="quiz-prompt-row">
+            <div id="quiz-prompt" class="quiz-prompt"></div>
+            <button id="quiz-audio" class="audio-btn small" hidden aria-label="播放发音">🔊</button>
+          </div>
+          <div id="quiz-options" class="quiz-options"></div>
+          <div id="quiz-spell" class="quiz-spell" hidden>
+            <div id="quiz-spell-answer" class="quiz-spell-answer"></div>
+            <div id="quiz-letters" class="quiz-letters"></div>
+            <div class="quiz-spell-actions">
+              <button id="btn-spell-clear" class="btn">清除</button>
+              <button id="btn-spell-confirm" class="btn btn-primary">确认</button>
+            </div>
+          </div>
+          <div id="quiz-feedback" class="quiz-feedback" hidden></div>
+        </div>
+
+        <!-- 经典翻卡面板（经典模式） -->
         <div id="flashcard" class="flashcard">
           <div class="flashcard-inner" id="flashcard-inner">
             <div class="flashcard-face front">
@@ -136,6 +157,10 @@
 
       <h2 class="section-title">学习设置</h2>
       <div class="setting-group">
+        <label class="setting-row">
+          <span>互动答题模式（Duolingo 风格）</span>
+          <input id="set-quiz-mode" type="checkbox" checked>
+        </label>
         <label class="setting-row">
           <span>每日新词数量</span>
           <input id="set-daily" type="number" min="5" max="50" step="5" value="20">

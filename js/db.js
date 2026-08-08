@@ -155,6 +155,7 @@ export function getSettingsSync() {
 export const DEFAULT_SETTINGS = {
   dailyCount: 20,          // 每日新词数
   customFirst: false,      // 自定义词表优先
+  quizMode: true,          // 互动答题模式（默认开启，可切回经典翻卡）
   aiEnabled: true,         // AI 兜底开关
   apiKey: "",              // DeepSeek API key（仅存本地）
   apiBase: "https://api.deepseek.com", // API 地址

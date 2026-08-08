@@ -9,6 +9,7 @@ import * as dict from "./dict.js";
 import { todayStr, nextReview, needsReview, calcStreak, buildDailyQueue, shuffle } from "./core.js";
 import { getEntry, aiEnrich, toast, $, esc } from "./ui.js";
 import { speak } from "./tts.js";
+import { makeQuestion, judge } from "./quiz.js";
 
 const MAX_DAILY_REPEAT = 3; // 同一张卡当天最多重学次数
 
@@ -23,6 +24,8 @@ const state = {
   done: 0,
   curEntry: null,   // 当前卡片词条（翻面后）
   flipped: false,
+  quiz: null,       // 当前互动题目
+  quizAnswer: "",   // 拼写题当前拼写
 };
 
 /* ================= 初始化 ================= */
@@ -36,7 +39,15 @@ export async function initStudy() {
     db.getAllStudy(),
     db.getAllSaved(),
   ]);
-  state.studyRec = rec || { date: todayStr(), learned: [], marks: {}, reviews: [], done: false };
+  state.studyRec = rec
+    ? {
+        date: rec.date,
+        learned: rec.learned || [],
+        marks: rec.marks || {},
+        reviews: rec.reviews || [],
+        done: !!rec.done,
+      }
+    : { date: todayStr(), learned: [], marks: {}, reviews: [], done: false };
   state.queue = queue;
   state.learnedSet = new Set();
   for (const s of studies) for (const w of s.learned || []) state.learnedSet.add(w);
@@ -110,6 +121,8 @@ function nextCard() {
   state.index++;
   state.flipped = false;
   state.curEntry = null;
+  state.quiz = null;
+  state.quizAnswer = "";
 
   if (state.index >= state.cards.length) {
     finishSession();
@@ -122,6 +135,163 @@ function nextCard() {
 
   $("study-counter").textContent =
     `第 ${state.index + 1} / ${state.cards.length} 张 · ${card.kind === "review" ? "复习" : "新词"}`;
+
+  if (getSettingsSync().quizMode) {
+    // 互动答题模式
+    showQuiz(card);
+  } else {
+    // 经典翻卡模式
+    showFlashcard(card);
+  }
+}
+
+/* ================= 互动答题 ================= */
+
+const QUIZ_TYPE_LABELS = {
+  choice: "选择题 · 选英文释义",
+  "choice-rev": "选择题 · 选西语单词",
+  listen: "听力题 · 听音选词",
+  spell: "拼写题 · 看释义拼单词",
+};
+
+async function showQuiz(card) {
+  $("quiz-panel").hidden = false;
+  $("flashcard").hidden = true;
+  $("study-actions").hidden = true;
+  $("quiz-feedback").hidden = true;
+
+  // 预取词条（词典/缓存）
+  const res = await getEntry(card.word, { useAI: false });
+  if (state.cards[state.index]?.word !== card.word) return; // 已切换
+  state.curEntry = res.entry;
+
+  let q;
+  try {
+    q = await makeQuestion(res.entry || { word: card.word, cn: "", en: "" }, state.index);
+  } catch {
+    q = {
+      type: "choice",
+      prompt: card.word,
+      options: [{ text: card.word, correct: true }],
+      target: card.word,
+    };
+  }
+  state.quiz = q;
+  renderQuiz(q);
+}
+
+function renderQuiz(q) {
+  $("quiz-type").textContent = QUIZ_TYPE_LABELS[q.type] || "答题";
+  $("quiz-prompt").textContent = q.prompt;
+  $("quiz-prompt").classList.toggle("big", q.type === "choice" || q.type === "listen");
+  $("quiz-audio").hidden = q.type !== "listen";
+
+  // 选项区（选择题/听力题）
+  const optBox = $("quiz-options");
+  optBox.hidden = q.type === "spell";
+  if (q.options) {
+    optBox.innerHTML = q.options.map((o, i) =>
+      `<button class="quiz-option" data-i="${i}">${esc(o.text)}</button>`).join("");
+    optBox.querySelectorAll(".quiz-option").forEach((btn) => {
+      btn.addEventListener("click", () => answerChoice(btn));
+    });
+  }
+
+  // 拼写题（字母块）
+  const spellBox = $("quiz-spell");
+  spellBox.hidden = q.type !== "spell";
+  if (q.type === "spell") {
+    state.quizAnswer = "";
+    renderSpell();
+  }
+
+  // 听力题自动播放发音
+  if (q.type === "listen" && q.audioText) {
+    setTimeout(() => speak(q.audioText), 100);
+  }
+}
+
+function renderSpell() {
+  $("quiz-spell-answer").textContent = state.quizAnswer || " ";
+  const box = $("quiz-letters");
+  const q = state.quiz;
+  box.innerHTML = q.letters.map((ch, i) =>
+    `<button class="spell-letter" data-i="${i}">${esc(ch)}</button>`).join("");
+  box.querySelectorAll(".spell-letter").forEach((btn) => {
+    btn.addEventListener("click", () => {
+      if (btn.disabled) return;
+      btn.disabled = true;
+      state.quizAnswer += btn.textContent;
+      $("quiz-spell-answer").textContent = state.quizAnswer;
+    });
+  });
+}
+
+function answerChoice(btn) {
+  if (btn.disabled) return;
+  const i = parseInt(btn.dataset.i, 10);
+  const opt = state.quiz.options[i];
+  const correct = judge(state.quiz, opt); // 选项对象判题
+  // 锁定选项
+  state.quiz.options.forEach((o) => {
+    const b = $("quiz-options").querySelector(`[data-i="${state.quiz.options.indexOf(o)}"]`);
+    if (b) b.disabled = true;
+  });
+  btn.classList.add(correct ? "correct" : "wrong");
+  showFeedback(correct, state.quiz.target);
+  if (correct) {
+    setTimeout(() => finishQuiz("know"), 700);
+  }
+}
+
+function spellConfirm() {
+  if (state.quizAnswer.length < 2) return;
+  const correct = judge(state.quiz, state.quizAnswer);
+  const ans = $("quiz-spell-answer");
+  ans.classList.add(correct ? "correct" : "wrong");
+  if (!correct) {
+    ans.textContent = `${state.quizAnswer} → ${state.quiz.target}`;
+  }
+  showFeedback(correct, state.quiz.target);
+  if (correct) {
+    setTimeout(() => finishQuiz("know"), 700);
+  }
+}
+
+/** 清除拼写（重置字母块） */
+export function resetSpell() {
+  state.quizAnswer = "";
+  renderSpell();
+}
+
+/** 当前题目（测试用） */
+export function getQuiz() {
+  return state.quiz;
+}
+
+function showFeedback(correct, target) {
+  const fb = $("quiz-feedback");
+  fb.hidden = false;
+  fb.className = "quiz-feedback " + (correct ? "ok" : "err");
+  fb.innerHTML = correct
+    ? `✓ 回答正确`
+    : `✗ 正确答案：<b>${esc(target)}</b> <button id="btn-quiz-next" class="btn btn-primary btn-sm">继续</button>`;
+  if (!correct) {
+    $("btn-quiz-next").addEventListener("click", () => finishQuiz("forgot"));
+  }
+}
+
+/** 答题完成：结果映射到复习系统并进入下一题 */
+function finishQuiz(mark) {
+  markCard(mark);
+}
+
+/* ================= 经典翻卡 ================= */
+
+function showFlashcard(card) {
+  $("quiz-panel").hidden = true;
+  $("flashcard").hidden = false;
+  $("study-actions").hidden = true;
 
   // 正面立即显示，背面内容异步加载
   const cached = card.word;

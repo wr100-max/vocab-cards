@@ -129,6 +129,9 @@ function bindStudy() {
   $("btn-know").addEventListener("click", () => study.markCard("know"));
   $("btn-fuzzy").addEventListener("click", () => study.markCard("fuzzy"));
   $("btn-forgot").addEventListener("click", () => study.markCard("forgot"));
+  // 互动答题：拼写题控制
+  $("btn-spell-clear").addEventListener("click", () => study.resetSpell());
+  $("btn-spell-confirm").addEventListener("click", () => study.spellConfirm());
 }
 
 /* ---------- 弹层关闭 ---------- */

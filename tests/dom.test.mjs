@@ -98,7 +98,9 @@ if (saveBtn) {
   check("T4 生词本含 hablar", listText.includes("hablar"), `实际: ${listText.slice(0, 80)}`);
 }
 
-/* T5: 背单词开始 → 卡片出现 → 翻面 → 标记 */
+/* T5: 背单词开始（经典翻卡模式）→ 卡片出现 → 翻面 → 标记 */
+const { db: dbMod } = await import("../js/db.js");
+await dbMod.setSettings({ quizMode: false }); // 经典翻卡模式
 doc.querySelector('.tab-btn[data-tab="study"]').dispatchEvent(new window.MouseEvent("click", { bubbles: true }));
 await new Promise((r) => setTimeout(r, 400));
 $("btn-start-study").dispatchEvent(new window.MouseEvent("click", { bubbles: true }));
@@ -131,7 +133,8 @@ check("T7 导入后生词本 ≥100 词", items >= 100, `实际: ${items}`);
 check("T7 生词本含常用词 hola", listText2.includes("hola") || listText2.includes("casa"), `实际: ${listText2.slice(0, 60)}`);
 check("T7 导入不重复（含 hablar）", listText2.includes("hablar"), `实际: ${listText2.slice(0, 60)}`);
 
-/* T8: 导入 100 词后（生词本非空）仍可开始背单词 */
+/* T8: 导入 100 词后（生词本非空）仍可开始背单词（经典翻卡模式） */
+await dbMod.setSettings({ quizMode: false }); // 经典模式
 doc.querySelector('.tab-btn[data-tab="study"]').dispatchEvent(new window.MouseEvent("click", { bubbles: true }));
 await new Promise((r) => setTimeout(r, 500));
 $("btn-start-study").dispatchEvent(new window.MouseEvent("click", { bubbles: true }));
@@ -154,7 +157,6 @@ await new Promise((r) => setTimeout(r, 100));
 check("T9 点击 🔊 不崩溃", true);
 
 /* T10: 残留未完成学习记录（昨日学过 1 词未完成）时，仍可正常开始学习 */
-const { db: dbMod } = await import("../js/db.js");
 const { todayStr: ts } = await import("../js/core.js");
 await dbMod.putStudy({ date: ts(), learned: ["residualword"], marks: { residualword: "know" }, done: false });
 const studyMod = await import("../js/study.js");
@@ -163,6 +165,49 @@ await studyMod.startStudy(); // 残留记录不阻塞重新开始
 await new Promise((r) => setTimeout(r, 600));
 check("T10 残留记录下可直接开始学习", $("study-card-wrap").hidden === false, `hidden=${$("study-card-wrap").hidden}`);
 check("T10 进度显示计划数 0/20", $("study-progress-text").textContent === "今日 0 / 20", `实际: ${$("study-progress-text").textContent}`);
+
+/* T11: 互动答题模式（切换回互动模式）完整流程 */
+await dbMod.setSettings({ quizMode: true });
+await studyMod.initStudy();
+await studyMod.startStudy();
+await new Promise((r) => setTimeout(r, 900));
+check("T11 答题面板可见", $("quiz-panel").hidden === false, `hidden=${$("quiz-panel").hidden}`);
+check("T11 题型标签已渲染", $("quiz-type").textContent.length > 0, `实际: ${$("quiz-type").textContent}`);
+const q = studyMod.getQuiz();
+if (q?.type === "spell") {
+  check("T11 拼写题字母块已渲染", doc.querySelectorAll(".spell-letter").length === q.letters.length, `实际: ${doc.querySelectorAll(".spell-letter").length}`);
+  // 点击字母拼出正确单词
+  for (const ch of q.target) {
+    const btn = [...doc.querySelectorAll(".spell-letter")].find((b) => !b.disabled && b.textContent === ch);
+    if (btn) btn.dispatchEvent(new window.MouseEvent("click", { bubbles: true }));
+  }
+  $("btn-spell-confirm").dispatchEvent(new window.MouseEvent("click", { bubbles: true }));
+  await new Promise((r) => setTimeout(r, 900));
+  check("T11 拼写正确后进入下一题", $("study-counter").textContent.includes("第 2 /"), `实际: ${$("study-counter").textContent}`);
+} else {
+  check("T11 选择题选项已渲染", doc.querySelectorAll(".quiz-option").length === 4, `实际: ${doc.querySelectorAll(".quiz-option").length}`);
+  // 答对：点击正确选项
+  const correctIdx = q.options.findIndex((o) => o.correct);
+  doc.querySelectorAll(".quiz-option")[correctIdx].dispatchEvent(new window.MouseEvent("click", { bubbles: true }));
+  await new Promise((r) => setTimeout(r, 900));
+  check("T11 答对后进入下一题", $("study-counter").textContent.includes("第 2 /"), `实际: ${$("study-counter").textContent}`);
+  // 答错：点第一个错误选项 → 显示正确答案与继续按钮
+  const wrongIdx = q.options.findIndex((o, i) => !o.correct && i !== correctIdx);
+  const q2 = studyMod.getQuiz();
+  if (q2 && q2.options) {
+    const wIdx = q2.options.findIndex((o) => !o.correct);
+    if (wIdx >= 0) {
+      doc.querySelectorAll(".quiz-option")[wIdx].dispatchEvent(new window.MouseEvent("click", { bubbles: true }));
+      await new Promise((r) => setTimeout(r, 200));
+      check("T11 答错显示正确答案", $("quiz-feedback").textContent.includes(q2.target), `实际: ${$("quiz-feedback").textContent.slice(0, 60)}`);
+      const nextBtn = $("btn-quiz-next");
+      check("T11 答错出现继续按钮", nextBtn !== null);
+      nextBtn?.dispatchEvent(new window.MouseEvent("click", { bubbles: true }));
+      await new Promise((r) => setTimeout(r, 600));
+      check("T11 继续后进入下一题", $("study-counter").textContent.includes("第 3 /") || $("study-counter").textContent.includes("第 4 /"), `实际: ${$("study-counter").textContent}`);
+    }
+  }
+}
 
 console.log(`\n结果：${passed} 通过，${failed} 失败`);
 process.exit(failed ? 1 : 0);

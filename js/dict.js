@@ -111,6 +111,32 @@ export async function *iterateWords(start = 0, batch = 500) {
   }
 }
 
+/**
+ * 从指定单词所在分片随机取 n 个有释义的其他词条（用于生成选择题干扰项）。
+ * 复用已加载的分片，无需额外网络请求。
+ * @returns {Promise<[entry, ...]>}
+ */
+export async function randomEntriesFromShard(word, n) {
+  const w = word.toLowerCase().trim();
+  const letter = shardOf(w);
+  let map;
+  try {
+    map = await loadShard(letter);
+  } catch {
+    return [];
+  }
+  const keys = [...map.keys()].filter((k) => k !== w);
+  // 随机取样（Fisher-Yates 部分）
+  const out = [];
+  while (out.length < n && keys.length) {
+    const idx = Math.floor(Math.random() * keys.length);
+    const entry = map.get(keys[idx]);
+    keys.splice(idx, 1);
+    if (entry?.cn) out.push(entry);
+  }
+  return out;
+}
+
 /* ---------- 词典缓存（页面层主动缓存，带进度显示） ---------- */
 
 /** 找到当前 Service Worker 版本的缓存（vocab-vN 中数字最大的） */
