@@ -184,7 +184,12 @@ function renderQuiz(q) {
   $("quiz-type").textContent = QUIZ_TYPE_LABELS[q.type] || "答题";
   $("quiz-prompt").textContent = q.prompt;
   $("quiz-prompt").classList.toggle("big", q.type === "choice" || q.type === "listen");
-  $("quiz-audio").hidden = q.type !== "listen";
+
+  // 发音按钮：所有题型一律显示、始终可见
+  // - listen/choice：prompt 是西语单词 → 播 prompt
+  // - choice-rev/spell：播目标词（正确答案的发音，辅助猜词/听音拼写）
+  $("quiz-audio").dataset.speak = (q.type === "listen" || q.type === "choice") ? q.prompt : q.target;
+  $("quiz-audio").hidden = false;
 
   // 选项区（选择题/听力题）
   const optBox = $("quiz-options");
@@ -204,15 +209,6 @@ function renderQuiz(q) {
     state.quizAnswer = "";
     renderSpell();
   }
-
-  // 发音按钮（所有题型可用）：
-  // - listen/choice：prompt 是西语单词 → 播 prompt
-  // - choice-rev/spell：播目标词（正确答案的发音，辅助猜词/听音拼写）
-  let speakText = "";
-  if (q.type === "listen" || q.type === "choice") speakText = q.prompt;
-  else speakText = q.target;
-  $("quiz-audio").dataset.speak = speakText || "";
-  $("quiz-audio").hidden = !speakText;
 }
 
 function renderSpell() {
