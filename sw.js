@@ -1,7 +1,7 @@
 /* Service Worker：缓存应用外壳，支持离线使用。
  * 词典数据（3.5MB）由页面层主动缓存并显示进度（js/dict.js ensureDictCached），
  * SW 只负责外壳，安装快、不易被 iOS 中断。 */
-const VERSION = "vocab-v19"; // v19：听力题不显示原词
+const VERSION = "vocab-v20"; // v20：听力题渲染层强制不显示原词（免疫旧缓存）
 
 const APP_SHELL = [
   "./",

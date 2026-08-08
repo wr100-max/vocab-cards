@@ -182,7 +182,10 @@ async function showQuiz(card) {
 
 function renderQuiz(q) {
   $("quiz-type").textContent = QUIZ_TYPE_LABELS[q.type] || "答题";
-  $("quiz-prompt").textContent = q.prompt;
+  // 听力题强制只显示提示语（不显示原词），即使旧缓存数据带单词也不显示
+  $("quiz-prompt").textContent = q.type === "listen"
+    ? "🔊 听发音，选出正确的单词"
+    : q.prompt;
   $("quiz-prompt").classList.toggle("big", q.type === "choice");
   $("quiz-prompt").classList.toggle("hint-text", q.type === "listen");
 
