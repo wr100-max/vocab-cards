@@ -24,6 +24,19 @@ export async function initStats() {
   bindEvents();
   renderAIStatus();
   renderVoiceStatus();
+  renderDiag();
+}
+
+/** 显示缓存版本与 SW 状态（确认手机是否更新到最新版） */
+async function renderDiag() {
+  try {
+    const keys = await caches.keys();
+    const caches_ = keys.filter((k) => /^vocab-v\d+$/.test(k)).join(", ") || "无";
+    const sw = ("serviceWorker" in navigator && navigator.serviceWorker.controller) ? "已接管" : "未接管";
+    $("diag-info").textContent = `缓存版本：${caches_} · Service Worker：${sw}`;
+  } catch {
+    $("diag-info").textContent = "无法读取缓存状态";
+  }
 }
 
 function bindEvents() {

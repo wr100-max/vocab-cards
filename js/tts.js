@@ -39,13 +39,13 @@ export function hasSpanishVoice() {
  * iOS 兼容要点：
  * - 必须在用户手势的同步调用栈内调用（iOS 静默拒绝异步 speak）
  * - 只设置 lang 不设置 voice（iOS 显式指定 voice 可能导致无声，按 lang 自动匹配最稳）
- * - 不调用 cancel()：iOS 上 cancel 后立即 speak 会被静默拒绝；正在播放时忽略重复点击
+ * - 不 cancel、不检查 speaking/pending：iOS 上 speaking 状态可能卡死为 true，
+ *   任何守卫都会导致后续发音被永久拦截；重复点击排队可接受
  * @param {string} text 要朗读的文本
  * @param {object} opts {rate: 语速, onEnd: 结束回调}
  */
 export function speak(text, { rate = 1, onEnd } = {}) {
   if (typeof speechSynthesis === "undefined" || !text) return false;
-  if (speechSynthesis.speaking || speechSynthesis.pending) return true; // 正在播放，忽略重复
   const u = new SpeechSynthesisUtterance(text);
   u.lang = "es-ES";
   u.rate = rate;
