@@ -162,7 +162,11 @@ export async function ensureDictCached(onProgress) {
       } catch { /* 继续下载 */ }
     }
     try {
-      const resp = await fetch(url);
+      // 单文件 10 秒超时：网络不稳时快速跳过，避免拖慢整体缓存
+      const ctrl = new AbortController();
+      const timer = setTimeout(() => ctrl.abort(), 10000);
+      const resp = await fetch(url, { signal: ctrl.signal });
+      clearTimeout(timer);
       if (resp.ok && cache) await cache.put(url, resp.clone());
       if (!resp.ok) failed++;
     } catch {

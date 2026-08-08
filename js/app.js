@@ -32,8 +32,8 @@ async function boot() {
     toast("内置词典加载失败，请检查网络（首次使用需要联网加载词典数据）", 4000);
   }
 
-  // 词典分片缓存：等待 SW 就绪后补齐，进度条实时显示；失败可点击重试
-  await cacheDictWithProgress();
+  // 词典分片缓存：后台并行执行（不阻塞主流程，按钮立即可用）；进度条实时显示，失败可重试
+  cacheDictWithProgress();
 
   await Promise.all([study.initStudy(), savedPage.initSaved(), statsPage.initStats()]);
 
