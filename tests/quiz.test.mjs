@@ -47,6 +47,8 @@ check("choice 判题错误", judge(q1, "wrong-answer") === false);
 
 /* 听力题 */
 const q2 = await makeQuestion(entry, 1);
+check("listen 题不显示原词", !q2.prompt.includes("hablar"), `实际: ${q2.prompt}`);
+check("listen 题含提示语", q2.prompt.length > 0);
 check("listen 题含发音文本", q2.audioText === "hablar");
 check("listen 题判题", judge(q2, "hablar") === true);
 

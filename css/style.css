@@ -98,6 +98,8 @@ body {
   flex: 1;
 }
 .quiz-prompt.big { font-size: 30px; font-weight: 800; }
+.quiz-prompt.hint-text { font-size: 14px; color: var(--text-sub); font-weight: 400; }
+.audio-btn.big { width: 60px; height: 60px; font-size: 26px; }
 
 .quiz-options { display: flex; flex-direction: column; gap: 10px; }
 .quiz-option {

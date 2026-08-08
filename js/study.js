@@ -183,12 +183,20 @@ async function showQuiz(card) {
 function renderQuiz(q) {
   $("quiz-type").textContent = QUIZ_TYPE_LABELS[q.type] || "答题";
   $("quiz-prompt").textContent = q.prompt;
-  $("quiz-prompt").classList.toggle("big", q.type === "choice" || q.type === "listen");
+  $("quiz-prompt").classList.toggle("big", q.type === "choice");
+  $("quiz-prompt").classList.toggle("hint-text", q.type === "listen");
 
   // 发音按钮：所有题型一律显示、始终可见
   // - listen/choice：prompt 是西语单词 → 播 prompt
   // - choice-rev/spell：播目标词（正确答案的发音，辅助猜词/听音拼写）
   $("quiz-audio").dataset.speak = (q.type === "listen" || q.type === "choice") ? q.prompt : q.target;
+  // 听力题：隐藏数据中的提示语（不读出来），放大按钮突出"听"
+  if (q.type === "listen") {
+    $("quiz-audio").dataset.speak = q.audioText;
+    $("quiz-audio").classList.add("big");
+  } else {
+    $("quiz-audio").classList.remove("big");
+  }
   $("quiz-audio").hidden = false;
 
   // 选项区（选择题/听力题）

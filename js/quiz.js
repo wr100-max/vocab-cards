@@ -47,15 +47,15 @@ export async function makeQuestion(entry, round) {
   }
 
   if (type === "listen") {
-    // 听力题：听发音选单词（语音不可用时会退化为选择题，由 UI 决定）
+    // 听力题：听发音选单词（不显示原词，避免失去听音意义）
     const distractors = await pickDistractors(entry, 3, entry.word);
     const options = [entry, ...distractors]
       .sort(() => Math.random() - 0.5)
       .map((e) => ({ text: e.word, correct: e.word === entry.word }));
     return {
       type: "listen",
-      prompt: entry.word,
-      promptLang: "es",
+      prompt: "🔊 听发音，选出正确的单词",
+      promptLang: "zh",
       options,
       target: entry.word,
       audioText: entry.word,
