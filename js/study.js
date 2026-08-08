@@ -286,7 +286,10 @@ export async function studyMore() {
 }
 
 function renderOverview() {
-  const total = state.studyRec.done ? state.studyRec.learned.length : Math.max(state.sessionTotal, state.studyRec.learned.length);
+  // 未开始时显示当日计划数；进行中用会话总数；完成后用实际学习数
+  const total = state.studyRec.done
+    ? state.studyRec.learned.length
+    : (state.sessionTotal || state.settings.dailyCount);
   const done = state.studyRec.done ? total : Math.min(state.done, total);
   $("study-progress-text").textContent = `今日 ${done} / ${total}`;
   $("study-progress-fill").style.width = total ? `${(done / total) * 100}%` : "0%";
@@ -295,7 +298,8 @@ function renderOverview() {
   $("study-review-info").textContent = due ? `📌 待复习 ${due} 个` : "📌 无待复习";
   $("study-new-info").textContent = `新词 ${state.settings.dailyCount}/天`;
 
-  if (!state.studyRec.done && !state.cards.length && !state.studyRec.learned.length) {
+  // 只要今日会话未开始（卡片未组装），就显示开始按钮（不受残留学习记录影响）
+  if (!state.studyRec.done && !state.cards.length) {
     $("btn-start-study").hidden = false;
   }
   if (state.studyRec.done) {

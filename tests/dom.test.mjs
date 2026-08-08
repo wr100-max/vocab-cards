@@ -153,5 +153,15 @@ audioBtn.dispatchEvent(new window.MouseEvent("click", { bubbles: true }));
 await new Promise((r) => setTimeout(r, 100));
 check("T9 点击 🔊 不崩溃", true);
 
+/* T10: 残留未完成学习记录（昨日学过 1 词未完成）时，开始按钮仍显示 */
+const { db: dbMod } = await import("../js/db.js");
+const { todayStr: ts } = await import("../js/core.js");
+await dbMod.putStudy({ date: ts(), learned: ["residualword"], marks: { residualword: "know" }, done: false });
+const studyMod = await import("../js/study.js");
+await studyMod.initStudy();
+await new Promise((r) => setTimeout(r, 300));
+check("T10 残留记录下开始按钮可见", $("btn-start-study").hidden === false, `hidden=${$("btn-start-study").hidden}`);
+check("T10 进度显示计划数 0/20", $("study-progress-text").textContent === "今日 0 / 20", `实际: ${$("study-progress-text").textContent}`);
+
 console.log(`\n结果：${passed} 通过，${failed} 失败`);
 process.exit(failed ? 1 : 0);
