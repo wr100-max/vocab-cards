@@ -205,10 +205,8 @@ function renderQuiz(q) {
     renderSpell();
   }
 
-  // 听力题自动播放发音
-  if (q.type === "listen" && q.audioText) {
-    setTimeout(() => speak(q.audioText), 100);
-  }
+  // 听力题：🔊 由用户点击播放（iOS 要求手势同步发声，自动播放会被拒绝）
+  $("quiz-audio").dataset.speak = q.type === "listen" && q.audioText ? q.audioText : "";
 }
 
 function renderSpell() {

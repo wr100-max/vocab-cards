@@ -166,7 +166,6 @@ await new Promise((r) => setTimeout(r, 600));
 check("T10 残留记录下可直接开始学习", $("study-card-wrap").hidden === false, `hidden=${$("study-card-wrap").hidden}`);
 check("T10 进度显示计划数 0/20", $("study-progress-text").textContent === "今日 0 / 20", `实际: ${$("study-progress-text").textContent}`);
 
-/* T11: 互动答题模式（切换回互动模式）完整流程 */
 await dbMod.setSettings({ quizMode: true });
 await studyMod.initStudy();
 await studyMod.startStudy();
@@ -207,6 +206,26 @@ if (q?.type === "spell") {
       check("T11 继续后进入下一题", $("study-counter").textContent.includes("第 3 /") || $("study-counter").textContent.includes("第 4 /"), `实际: ${$("study-counter").textContent}`);
     }
   }
+}
+
+/* T12: 互动模式下经典翻卡按钮隐藏、题型面板互斥（在 T11 设置 quizMode 之后） */
+await studyMod.initStudy();
+await studyMod.startStudy();
+await new Promise((r) => setTimeout(r, 900));
+const q3 = studyMod.getQuiz();
+check("T12 答题时经典按钮隐藏", $("study-actions").hidden === true, `hidden=${$("study-actions").hidden}`);
+check("T12 答题时翻卡区隐藏", $("flashcard").hidden === true, `hidden=${$("flashcard").hidden}`);
+if (q3.type === "spell") {
+  check("T12 拼写题选项区隐藏", $("quiz-options").hidden === true);
+  check("T12 拼写题字母区可见", $("quiz-spell").hidden === false);
+} else {
+  check("T12 选择题选项区可见", $("quiz-options").hidden === false);
+}
+if (q3.type === "listen") {
+  check("T12 听力题 🔊 绑定发音", $("quiz-audio").dataset.speak === q3.audioText, `实际: ${$("quiz-audio").dataset.speak}`);
+  check("T12 听力题 🔊 可见", $("quiz-audio").hidden === false);
+} else {
+  check("T12 非听力题 🔊 隐藏", $("quiz-audio").hidden === true);
 }
 
 console.log(`\n结果：${passed} 通过，${failed} 失败`);

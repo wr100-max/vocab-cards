@@ -268,6 +268,12 @@ body {
 }
 
 /* ============ 背单词：卡片 ============ */
+/* 修复 display 覆盖 hidden：这些容器按需显隐 */
+.study-actions[hidden],
+.quiz-options[hidden],
+.quiz-spell[hidden],
+.quiz-feedback[hidden] { display: none; }
+
 .study-counter {
   text-align: center;
   color: var(--text-sub);
