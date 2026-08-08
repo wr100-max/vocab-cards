@@ -223,10 +223,12 @@ if (q3.type === "spell") {
 }
 if (q3.type === "listen") {
   check("T12 听力题 🔊 绑定发音", $("quiz-audio").dataset.speak === q3.audioText, `实际: ${$("quiz-audio").dataset.speak}`);
-  check("T12 听力题 🔊 可见", $("quiz-audio").hidden === false);
+} else if (q3.type === "choice") {
+  check("T12 选择题 🔊 播 prompt 发音", $("quiz-audio").dataset.speak === q3.prompt, `实际: ${$("quiz-audio").dataset.speak}`);
 } else {
-  check("T12 非听力题 🔊 隐藏", $("quiz-audio").hidden === true);
+  check("T12 拼写/反向题 🔊 播目标词", $("quiz-audio").dataset.speak === q3.target, `实际: ${$("quiz-audio").dataset.speak}`);
 }
+check("T12 所有题型 🔊 可见", $("quiz-audio").hidden === false, `hidden=${$("quiz-audio").hidden}`);
 
 /* T13: 拼写题跳过流程与对错反馈 */
 await dbMod.setSettings({ quizMode: true });

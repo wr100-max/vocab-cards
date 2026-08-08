@@ -205,8 +205,14 @@ function renderQuiz(q) {
     renderSpell();
   }
 
-  // 听力题：🔊 由用户点击播放（iOS 要求手势同步发声，自动播放会被拒绝）
-  $("quiz-audio").dataset.speak = q.type === "listen" && q.audioText ? q.audioText : "";
+  // 发音按钮（所有题型可用）：
+  // - listen/choice：prompt 是西语单词 → 播 prompt
+  // - choice-rev/spell：播目标词（正确答案的发音，辅助猜词/听音拼写）
+  let speakText = "";
+  if (q.type === "listen" || q.type === "choice") speakText = q.prompt;
+  else speakText = q.target;
+  $("quiz-audio").dataset.speak = speakText || "";
+  $("quiz-audio").hidden = !speakText;
 }
 
 function renderSpell() {
