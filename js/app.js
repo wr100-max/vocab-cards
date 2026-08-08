@@ -23,8 +23,8 @@ async function boot() {
   bindTabs();
   bindModalClose();
   bindLookup();
+  bindAudio();   // 🔊 全局委托最先绑定：即使后续绑定异常也不受影响
   bindStudy();
-  bindAudio();
 
   try {
     await dict.loadIndex();
@@ -123,16 +123,17 @@ function bindAudio() {
 /* ---------- 背单词事件 ---------- */
 
 function bindStudy() {
-  $("btn-start-study").addEventListener("click", () => study.startStudy());
-  $("btn-study-more").addEventListener("click", () => study.studyMore());
-  $("flashcard").addEventListener("click", () => study.flipCard());
-  $("btn-know").addEventListener("click", () => study.markCard("know"));
-  $("btn-fuzzy").addEventListener("click", () => study.markCard("fuzzy"));
-  $("btn-forgot").addEventListener("click", () => study.markCard("forgot"));
+  // 防御：元素缺失（新旧缓存混合期）时不中断后续绑定
+  $("btn-start-study")?.addEventListener("click", () => study.startStudy());
+  $("btn-study-more")?.addEventListener("click", () => study.studyMore());
+  $("flashcard")?.addEventListener("click", () => study.flipCard());
+  $("btn-know")?.addEventListener("click", () => study.markCard("know"));
+  $("btn-fuzzy")?.addEventListener("click", () => study.markCard("fuzzy"));
+  $("btn-forgot")?.addEventListener("click", () => study.markCard("forgot"));
   // 互动答题：拼写题控制
-  $("btn-spell-skip").addEventListener("click", () => study.spellSkip());
-  $("btn-spell-clear").addEventListener("click", () => study.resetSpell());
-  $("btn-spell-confirm").addEventListener("click", () => study.spellConfirm());
+  $("btn-spell-skip")?.addEventListener("click", () => study.spellSkip());
+  $("btn-spell-clear")?.addEventListener("click", () => study.resetSpell());
+  $("btn-spell-confirm")?.addEventListener("click", () => study.spellConfirm());
 }
 
 /* ---------- 弹层关闭 ---------- */
