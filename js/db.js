@@ -132,4 +132,6 @@ export const DEFAULT_SETTINGS = {
   apiKey: "",              // DeepSeek API key（仅存本地）
   apiBase: "https://api.deepseek.com", // API 地址
   model: "deepseek-chat",  // 模型
+  autoSpeak: false,        // 翻面自动朗读
+  rate: 1,                 // 语速（0.75 慢 / 1 正常 / 1.25 快）
 };

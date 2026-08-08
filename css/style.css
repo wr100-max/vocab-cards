@@ -218,8 +218,31 @@ body {
 .flashcard-face.back { transform: rotateY(180deg); align-items: stretch; justify-content: flex-start; text-align: left; }
 
 .card-word { font-size: 40px; font-weight: 800; letter-spacing: .5px; word-break: break-word; }
+.card-word-row { display: flex; align-items: center; gap: 12px; }
 .card-phonetic { font-size: 17px; color: var(--text-sub); margin-top: 10px; }
 .tap-hint { position: absolute; bottom: 22px; font-size: 13px; color: var(--text-sub); opacity: .7; }
+
+/* 发音按钮 */
+.audio-btn {
+  border: 1px solid color-mix(in srgb, var(--primary) 30%, transparent);
+  background: color-mix(in srgb, var(--primary) 10%, var(--card));
+  color: var(--primary);
+  border-radius: 50%;
+  width: 42px;
+  height: 42px;
+  font-size: 18px;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  transition: transform .08s, opacity .15s;
+  padding: 0;
+}
+.audio-btn:active { transform: scale(.92); }
+.audio-btn.small { width: 34px; height: 34px; font-size: 15px; }
+.card-back-top { display: flex; align-items: center; justify-content: space-between; }
+.audio-btn-back { width: 36px; height: 36px; font-size: 16px; }
 
 .card-pos { color: var(--primary); font-size: 14px; font-weight: 600; margin-bottom: 6px; }
 .card-cn { font-size: 19px; font-weight: 600; margin-bottom: 10px; }

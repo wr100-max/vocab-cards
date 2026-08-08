@@ -8,6 +8,7 @@ import { db } from "./db.js";
 import * as dict from "./dict.js";
 import { todayStr, nextReview, needsReview, calcStreak, buildDailyQueue, shuffle } from "./core.js";
 import { getEntry, aiEnrich, toast, $, esc } from "./ui.js";
+import { speak } from "./tts.js";
 
 const MAX_DAILY_REPEAT = 3; // 同一张卡当天最多重学次数
 
@@ -125,6 +126,8 @@ function nextCard() {
   // 正面立即显示，背面内容异步加载
   const cached = card.word;
   $("card-word").textContent = cached;
+  $("btn-card-audio").dataset.speak = cached; // 🔊 朗读当前单词
+  $("btn-card-audio-back").dataset.speak = "";
   $("card-phonetic").textContent = "";
   $("card-pos").textContent = "";
   $("card-cn").textContent = "加载中…";
@@ -147,12 +150,22 @@ export function flipCard() {
   const card = state.cards[state.index];
   if (state.curEntry) {
     renderBack(card.word);
+    autoSpeak(card.word);
   } else {
     // 词典没有 → 按需 AI 生成
     $("card-cn").textContent = "AI 生成中…";
     $("study-actions").hidden = true;
     loadEntryWithAI(card.word);
   }
+}
+
+/** 设置开启"翻面自动朗读"时朗读当前内容 */
+async function autoSpeak(word) {
+  const settings = await db.getSettings();
+  if (!settings.autoSpeak) return;
+  const entry = state.curEntry;
+  const text = entry?.ex ? `${word}. ${entry.ex}` : word;
+  speak(text, { rate: settings.rate || 1 });
 }
 
 function renderBack(word) {
@@ -163,6 +176,10 @@ function renderBack(word) {
   $("card-example").innerHTML = entry?.ex
     ? `<span class="ex-en">${esc(entry.ex)}</span>${entry.ex_cn ? `<span class="ex-cn">${esc(entry.ex_cn)}</span>` : ""}`
     : "";
+  // 🔊 背面按钮：朗读单词 + 例句
+  $("btn-card-audio-back").dataset.speak = entry?.ex
+    ? `${word}. ${entry.ex.replace(/[.!?;:]$/, "")}.`
+    : word;
   $("study-actions").hidden = false;
 
   // 词典有释义但缺例句时，自动用 AI 补充（结果写缓存，不阻塞操作）

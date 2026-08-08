@@ -82,6 +82,7 @@ export async function aiEnrich(entry) {
 export function entryHTML(entry, { showWord = false } = {}) {
   const parts = [];
   if (showWord) {
+    parts.push(`<button class="audio-btn small" data-speak="${esc(entry.word)}" aria-label="播放发音">🔊</button>`);
     parts.push(`<div class="lookup-word">${esc(entry.word)}</div>`);
   }
   if (entry.phonetic) parts.push(`<span class="lookup-phonetic">${esc(entry.phonetic)}</span>`);
@@ -100,7 +101,7 @@ export function entryHTML(entry, { showWord = false } = {}) {
 /** 详情弹层 HTML（含学习记录） */
 export function detailHTML(saved, entry) {
   const h = [];
-  h.push(`<div class="detail-word">${esc(saved.word)}</div>`);
+  h.push(`<div class="detail-word">${esc(saved.word)}<button class="audio-btn small" data-speak="${esc(saved.word)}" aria-label="播放发音">🔊</button></div>`);
   if (entry) {
     if (entry.phonetic) h.push(`<div class="detail-phonetic">${esc(entry.phonetic)}</div>`);
     if (entry.pos) h.push(`<div class="detail-pos">${esc(entry.pos)}</div>`);

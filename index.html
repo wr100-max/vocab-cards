@@ -50,12 +50,18 @@
         <div id="flashcard" class="flashcard">
           <div class="flashcard-inner" id="flashcard-inner">
             <div class="flashcard-face front">
-              <div id="card-word" class="card-word">word</div>
+              <div class="card-word-row">
+                <div id="card-word" class="card-word">word</div>
+                <button id="btn-card-audio" class="audio-btn" data-speak="" aria-label="播放发音">🔊</button>
+              </div>
               <div id="card-phonetic" class="card-phonetic">/fəˈnetɪk/</div>
               <div class="tap-hint">轻触卡片查看释义</div>
             </div>
             <div class="flashcard-face back">
-              <div id="card-pos" class="card-pos"></div>
+              <div class="card-back-top">
+                <div id="card-pos" class="card-pos"></div>
+                <button id="btn-card-audio-back" class="audio-btn audio-btn-back" data-speak="" aria-label="播放单词和例句">🔊</button>
+              </div>
               <div id="card-cn" class="card-cn"></div>
               <div id="card-en" class="card-en"></div>
               <div id="card-example" class="card-example"></div>
@@ -138,6 +144,23 @@
           <span>自定义词表优先</span>
           <input id="set-custom-first" type="checkbox">
         </label>
+      </div>
+
+      <h2 class="section-title">发音</h2>
+      <div class="setting-group">
+        <label class="setting-row">
+          <span>翻面后自动朗读</span>
+          <input id="set-auto-speak" type="checkbox">
+        </label>
+        <label class="setting-row">
+          <span>语速</span>
+          <select id="set-rate">
+            <option value="0.75">慢</option>
+            <option value="1" selected>正常</option>
+            <option value="1.25">快</option>
+          </select>
+        </label>
+        <div id="voice-status" class="hint"></div>
       </div>
 
       <h2 class="section-title">AI 生成（DeepSeek）</h2>

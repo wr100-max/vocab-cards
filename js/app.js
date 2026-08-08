@@ -8,6 +8,9 @@ import * as study from "./study.js";
 import * as savedPage from "./saved.js";
 import * as statsPage from "./stats.js";
 import { getEntry, entryHTML, toast, $, esc } from "./ui.js";
+import { speak, hasSpanishVoice } from "./tts.js";
+
+let voiceHintShown = false;
 
 /* ---------- 启动 ---------- */
 
@@ -21,6 +24,7 @@ async function boot() {
   bindModalClose();
   bindLookup();
   bindStudy();
+  bindAudio();
 
   try {
     await dict.loadIndex();
@@ -96,6 +100,24 @@ async function cacheDictWithProgress() {
   };
   box.addEventListener("click", run); // 失败时点击重试
   await run();
+}
+
+/* ---------- 发音事件（全局委托） ---------- */
+
+function bindAudio() {
+  document.addEventListener("click", async (e) => {
+    const btn = e.target.closest("[data-speak]");
+    if (!btn || !btn.dataset.speak) return;
+    e.stopPropagation(); // 不触发卡片翻面
+    const settings = await db.getSettings();
+    const ok = speak(btn.dataset.speak, { rate: settings.rate || 1 });
+    if (!ok) {
+      toast("当前设备不支持发音");
+    } else if (!hasSpanishVoice() && !voiceHintShown) {
+      voiceHintShown = true;
+      toast("未检测到西语语音包，发音可能不准；可在 iPhone 设置 → 辅助功能 → 朗读内容 → 语音 中下载", 4000);
+    }
+  });
 }
 
 /* ---------- 背单词事件 ---------- */

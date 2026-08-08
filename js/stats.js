@@ -4,6 +4,7 @@
 
 import { db, DEFAULT_SETTINGS } from "./db.js";
 import { todayStr, weekStart, calcStreak } from "./core.js";
+import { hasSpanishVoice } from "./tts.js";
 import { toast, $ } from "./ui.js";
 
 let settings = { ...DEFAULT_SETTINGS };
@@ -17,8 +18,11 @@ export async function initStats() {
   $("set-api-key").value = settings.apiKey || "";
   $("set-api-base").value = settings.apiBase || DEFAULT_SETTINGS.apiBase;
   $("set-model").value = settings.model || DEFAULT_SETTINGS.model;
+  $("set-auto-speak").checked = !!settings.autoSpeak;
+  $("set-rate").value = String(settings.rate ?? 1);
   bindEvents();
   renderAIStatus();
+  renderVoiceStatus();
 }
 
 function bindEvents() {
@@ -51,6 +55,11 @@ function bindEvents() {
     renderAIStatus();
   });
   $("set-model").addEventListener("change", (e) => save("model", e.target.value));
+  $("set-auto-speak").addEventListener("change", (e) => {
+    save("autoSpeak", e.target.checked);
+    toast(e.target.checked ? "已开启翻面自动朗读" : "已关闭自动朗读");
+  });
+  $("set-rate").addEventListener("change", (e) => save("rate", parseFloat(e.target.value)));
 
   $("btn-export-backup").addEventListener("click", exportBackup);
   $("btn-clear-data").addEventListener("click", clearData);
@@ -74,6 +83,13 @@ function renderAIStatus() {
     return;
   }
   el.textContent = `AI 已启用（${settings.model || "deepseek-chat"}）· Key ${key.slice(0, 6)}…${key.slice(-4)}`;
+}
+
+function renderVoiceStatus() {
+  const el = $("voice-status");
+  el.textContent = hasSpanishVoice()
+    ? "已检测到西语语音 ✓（系统 TTS，离线可用）"
+    : "未检测到西语语音：iPhone 可在 设置 → 辅助功能 → 朗读内容 → 语音 中下载「西班牙语」；期间将使用默认语音兜底";
 }
 
 /* ---------- 统计刷新 ---------- */

@@ -141,5 +141,17 @@ const word3 = $("card-word").textContent;
 check("T8 卡片正面有单词", word3 && word3 !== "word", `实际: ${word3}`);
 check("T8 卡片来自未学词池（非生词本已有词）", !listText2.includes(word3), `实际: ${word3}`);
 
+/* T9: 发音功能容错（jsdom 无 speechSynthesis，不崩溃且安全降级） */
+const { speak, hasSpanishVoice } = await import("../js/tts.js");
+check("T9 tts 模块在无 TTS 环境可加载", typeof speak === "function");
+check("T9 无 TTS 时 speak 安全返回 false", speak("hola") === false, `实际: ${speak("hola")}`);
+check("T9 无 TTS 时 hasSpanishVoice 为 false", hasSpanishVoice() === false);
+const audioBtn = $("btn-card-audio");
+check("T9 卡片正面有 🔊 按钮", audioBtn !== null && audioBtn.dataset.speak === word3, `实际: ${audioBtn?.dataset.speak}`);
+// 点击 🔊 不抛异常（事件委托路径）
+audioBtn.dispatchEvent(new window.MouseEvent("click", { bubbles: true }));
+await new Promise((r) => setTimeout(r, 100));
+check("T9 点击 🔊 不崩溃", true);
+
 console.log(`\n结果：${passed} 通过，${failed} 失败`);
 process.exit(failed ? 1 : 0);

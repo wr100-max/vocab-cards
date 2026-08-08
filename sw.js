@@ -1,7 +1,7 @@
 /* Service Worker：缓存应用外壳，支持离线使用。
  * 词典数据（3.5MB）由页面层主动缓存并显示进度（js/dict.js ensureDictCached），
  * SW 只负责外壳，安装快、不易被 iOS 中断。 */
-const VERSION = "vocab-v6";
+const VERSION = "vocab-v7"; // v7：新增发音功能（tts.js）
 
 const APP_SHELL = [
   "./",
@@ -18,6 +18,7 @@ const APP_SHELL = [
   "./js/core.js",
   "./js/saved.js",
   "./js/stats.js",
+  "./js/tts.js",
   "./icons/icon-192.png",
   "./icons/icon-512.png",
   "./icons/apple-touch-icon.png",
