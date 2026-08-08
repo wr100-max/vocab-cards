@@ -6,7 +6,7 @@
 
 import { randomEntriesFromShard } from "./dict.js";
 
-export const QUIZ_TYPES = ["choice", "listen", "spell", "choice-rev"];
+export const QUIZ_TYPES = ["choice", "spell", "choice-rev"];
 
 /** 生成 n 个互不重复且与正确项不同的干扰项 */
 async function pickDistractors(entry, n, correctText) {
@@ -43,22 +43,6 @@ export async function makeQuestion(entry, round) {
       letters,
       target: entry.word,
       hint: entry.pos || "",
-    };
-  }
-
-  if (type === "listen") {
-    // 听力题：听发音选单词（不显示原词，避免失去听音意义）
-    const distractors = await pickDistractors(entry, 3, entry.word);
-    const options = [entry, ...distractors]
-      .sort(() => Math.random() - 0.5)
-      .map((e) => ({ text: e.word, correct: e.word === entry.word }));
-    return {
-      type: "listen",
-      prompt: "🔊 听发音，选出正确的单词",
-      promptLang: "zh",
-      options,
-      target: entry.word,
-      audioText: entry.word,
     };
   }
 

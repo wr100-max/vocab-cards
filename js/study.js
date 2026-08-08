@@ -150,7 +150,6 @@ function nextCard() {
 const QUIZ_TYPE_LABELS = {
   choice: "选择题 · 选英文释义",
   "choice-rev": "选择题 · 选西语单词",
-  listen: "听力题 · 听音选词",
   spell: "拼写题 · 看释义拼单词",
 };
 
@@ -182,24 +181,14 @@ async function showQuiz(card) {
 
 function renderQuiz(q) {
   $("quiz-type").textContent = QUIZ_TYPE_LABELS[q.type] || "答题";
-  // 听力题强制只显示提示语（不显示原词），即使旧缓存数据带单词也不显示
-  $("quiz-prompt").textContent = q.type === "listen"
-    ? "🔊 听发音，选出正确的单词"
-    : q.prompt;
+  $("quiz-prompt").textContent = q.prompt;
   $("quiz-prompt").classList.toggle("big", q.type === "choice");
-  $("quiz-prompt").classList.toggle("hint-text", q.type === "listen");
 
   // 发音按钮：所有题型一律显示、始终可见
-  // - listen/choice：prompt 是西语单词 → 播 prompt
+  // - choice：prompt 是西语单词 → 播 prompt
   // - choice-rev/spell：播目标词（正确答案的发音，辅助猜词/听音拼写）
-  $("quiz-audio").dataset.speak = (q.type === "listen" || q.type === "choice") ? q.prompt : q.target;
-  // 听力题：隐藏数据中的提示语（不读出来），放大按钮突出"听"
-  if (q.type === "listen") {
-    $("quiz-audio").dataset.speak = q.audioText;
-    $("quiz-audio").classList.add("big");
-  } else {
-    $("quiz-audio").classList.remove("big");
-  }
+  $("quiz-audio").dataset.speak = q.type === "choice" ? q.prompt : q.target;
+  $("quiz-audio").classList.remove("big");
   $("quiz-audio").hidden = false;
 
   // 选项区（选择题/听力题）

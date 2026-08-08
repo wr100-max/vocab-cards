@@ -45,27 +45,20 @@ check("choice 题干扰项释义非空", q1.options.every((o) => o.text.length >
 check("choice 判题正确", judge(q1, q1.options.find((o) => o.correct)) === true);
 check("choice 判题错误", judge(q1, "wrong-answer") === false);
 
-/* 听力题 */
+/* 拼写题（round 1） */
 const q2 = await makeQuestion(entry, 1);
-check("listen 题不显示原词", !q2.prompt.includes("hablar"), `实际: ${q2.prompt}`);
-check("listen 题含提示语", q2.prompt.length > 0);
-check("listen 题含发音文本", q2.audioText === "hablar");
-check("listen 题判题", judge(q2, "hablar") === true);
+check("spell 题字母数=词长", q2.letters.length === entry.word.length, `实际: ${q2.letters.length} vs ${entry.word.length}`);
+check("spell 题字母集合正确", [...q2.letters].sort().join("") === entry.word.split("").sort().join(""));
+check("spell 判题正确（大小写不敏感）", judge(q2, "HABLAR") === true);
+check("spell 判题错误", judge(q2, "habla") === false);
 
-/* 拼写题 */
+/* 反向选择题（义→词，round 2） */
 const q3 = await makeQuestion(entry, 2);
-check("spell 题字母数=词长", q3.letters.length === entry.word.length, `实际: ${q3.letters.length} vs ${entry.word.length}`);
-check("spell 题字母集合正确", [...q3.letters].sort().join("") === entry.word.split("").sort().join(""));
-check("spell 判题正确（大小写不敏感）", judge(q3, "HABLAR") === true);
-check("spell 判题错误", judge(q3, "habla") === false);
+check("choice-rev 题 prompt 为英文释义", typeof q3.prompt === "string" && q3.prompt.length > 0);
+check("choice-rev 判题", judge(q3, "hablar") === true);
 
-/* 反向选择题（义→词） */
-const q4 = await makeQuestion(entry, 3);
-check("choice-rev 题 prompt 为英文释义", typeof q4.prompt === "string" && q4.prompt.length > 0);
-check("choice-rev 判题", judge(q4, "hablar") === true);
-
-/* 题型轮换 */
-check("四题轮换覆盖 4 种题型", [q1, q2, q3, q4].map((q) => q.type).join(",") === "choice,listen,spell,choice-rev");
+/* 题型轮换（听力题已移除） */
+check("题型轮换覆盖 3 种题型", [q1, q2, q3].map((q) => q.type).join(",") === "choice,spell,choice-rev");
 
 /* 干扰项互不相同 */
 check("选项互不重复", new Set(q1.options.map((o) => o.text)).size === 4);

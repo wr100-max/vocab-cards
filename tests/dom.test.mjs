@@ -259,7 +259,7 @@ if (qs?.type === "spell") {
   check("T13 跳过后出现继续按钮", nxt !== null);
   nxt?.dispatchEvent(new window.MouseEvent("click", { bubbles: true }));
   await new Promise((r) => setTimeout(r, 700));
-  check("T13 跳过后续进入下一题", $("study-counter").textContent.includes("第 4 /"), `实际: ${$("study-counter").textContent}`);
+  check("T13 跳过后续进入下一题", $("study-counter").textContent.includes("第 3 /"), `实际: ${$("study-counter").textContent}`);
 }
 
 /* T14: 拼写题「确认」完整路径（字母点击→确认→判对→下一题；空拼写提示） */
@@ -294,7 +294,7 @@ if (qsp?.type === "spell") {
   check("T14 拼写框已填词", $("quiz-spell-answer").textContent === qsp.target, `实际: ${$("quiz-spell-answer").textContent}`);
   $("btn-spell-confirm").dispatchEvent(new window.MouseEvent("click", { bubbles: true }));
   await new Promise((r) => setTimeout(r, 1400));
-  check("T14 拼写正确后进入下一题", $("study-counter").textContent.includes("第 4 /"), `实际: ${$("study-counter").textContent}`);
+  check("T14 拼写正确后进入下一题", $("study-counter").textContent.includes("第 3 /"), `实际: ${$("study-counter").textContent}`);
 }
 
 console.log(`\n结果：${passed} 通过，${failed} 失败`);
