@@ -242,8 +242,15 @@ function answerChoice(btn) {
   }
 }
 
-function spellConfirm() {
-  if (state.quizAnswer.length < 2) return;
+export function spellConfirm() {
+  if (state.quizAnswer.length < 2) {
+    // 空/过短拼写：明确提示，不做静默无效
+    const fb = $("quiz-feedback");
+    fb.hidden = false;
+    fb.className = "quiz-feedback err";
+    fb.textContent = "请先点击字母拼写单词";
+    return;
+  }
   const correct = judge(state.quiz, state.quizAnswer);
   const ans = $("quiz-spell-answer");
   if (correct) {

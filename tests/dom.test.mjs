@@ -260,5 +260,40 @@ if (qs?.type === "spell") {
   check("T13 跳过后续进入下一题", $("study-counter").textContent.includes("第 4 /"), `实际: ${$("study-counter").textContent}`);
 }
 
+/* T14: 拼写题「确认」完整路径（字母点击→确认→判对→下一题；空拼写提示） */
+await dbMod.setSettings({ quizMode: true });
+await studyMod.initStudy();
+await studyMod.startStudy();
+await new Promise((r) => setTimeout(r, 900));
+// 推进到拼写题（第 3 题）
+for (let step = 0; step < 2; step++) {
+  const qc = studyMod.getQuiz();
+  if (qc?.type === "spell") break;
+  if (qc?.options) {
+    const ci = qc.options.findIndex((o) => o.correct);
+    if (ci >= 0) {
+      doc.querySelectorAll(".quiz-option")[ci].dispatchEvent(new window.MouseEvent("click", { bubbles: true }));
+      await new Promise((r) => setTimeout(r, 1300));
+    }
+  }
+}
+const qsp = studyMod.getQuiz();
+check("T14 已到拼写题", qsp?.type === "spell", `实际: ${qsp?.type}`);
+if (qsp?.type === "spell") {
+  // 空拼写点确认 → 提示
+  $("btn-spell-confirm").dispatchEvent(new window.MouseEvent("click", { bubbles: true }));
+  await new Promise((r) => setTimeout(r, 100));
+  check("T14 空拼写确认有提示", $("quiz-feedback").textContent.includes("请先点击字母拼写"), `实际: ${$("quiz-feedback").textContent.slice(0, 40)}`);
+  // 字母拼出正确单词 → 确认 → 判对 → 下一题
+  for (const ch of qsp.target) {
+    const btn = [...doc.querySelectorAll(".spell-letter")].find((b) => !b.disabled && b.textContent === ch);
+    if (btn) btn.dispatchEvent(new window.MouseEvent("click", { bubbles: true }));
+  }
+  check("T14 拼写框已填词", $("quiz-spell-answer").textContent === qsp.target, `实际: ${$("quiz-spell-answer").textContent}`);
+  $("btn-spell-confirm").dispatchEvent(new window.MouseEvent("click", { bubbles: true }));
+  await new Promise((r) => setTimeout(r, 1400));
+  check("T14 拼写正确后进入下一题", $("study-counter").textContent.includes("第 4 /"), `实际: ${$("study-counter").textContent}`);
+}
+
 console.log(`\n结果：${passed} 通过，${failed} 失败`);
 process.exit(failed ? 1 : 0);
