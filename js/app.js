@@ -130,6 +130,7 @@ function bindStudy() {
   $("btn-fuzzy").addEventListener("click", () => study.markCard("fuzzy"));
   $("btn-forgot").addEventListener("click", () => study.markCard("forgot"));
   // 互动答题：拼写题控制
+  $("btn-spell-skip").addEventListener("click", () => study.spellSkip());
   $("btn-spell-clear").addEventListener("click", () => study.resetSpell());
   $("btn-spell-confirm").addEventListener("click", () => study.spellConfirm());
 }

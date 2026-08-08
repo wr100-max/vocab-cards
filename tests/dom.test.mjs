@@ -228,5 +228,37 @@ if (q3.type === "listen") {
   check("T12 非听力题 🔊 隐藏", $("quiz-audio").hidden === true);
 }
 
+/* T13: 拼写题跳过流程与对错反馈 */
+await dbMod.setSettings({ quizMode: true });
+await studyMod.initStudy();
+await studyMod.startStudy();
+await new Promise((r) => setTimeout(r, 900));
+// 推进到拼写题（题型轮换：第 3 题 index=2 为 spell）：答对前两题
+for (let step = 0; step < 2; step++) {
+  const qc = studyMod.getQuiz();
+  if (qc?.type === "spell") break; // 已到拼写题
+  if (qc?.options) {
+    const ci = qc.options.findIndex((o) => o.correct);
+    if (ci >= 0) {
+      doc.querySelectorAll(".quiz-option")[ci].dispatchEvent(new window.MouseEvent("click", { bubbles: true }));
+      await new Promise((r) => setTimeout(r, 1300));
+    }
+  }
+}
+const qs = studyMod.getQuiz();
+check("T13 已到拼写题", qs?.type === "spell", `实际: ${qs?.type}`);
+if (qs?.type === "spell") {
+  check("T13 拼写题有跳过按钮", $("btn-spell-skip") !== null);
+  // 跳过 → 显示正确答案 + 继续
+  $("btn-spell-skip").dispatchEvent(new window.MouseEvent("click", { bubbles: true }));
+  await new Promise((r) => setTimeout(r, 200));
+  check("T13 跳过后显示正确答案", $("quiz-feedback").textContent.includes(qs.target), `实际: ${$("quiz-feedback").textContent.slice(0, 50)}`);
+  const nxt = $("btn-quiz-next");
+  check("T13 跳过后出现继续按钮", nxt !== null);
+  nxt?.dispatchEvent(new window.MouseEvent("click", { bubbles: true }));
+  await new Promise((r) => setTimeout(r, 700));
+  check("T13 跳过后续进入下一题", $("study-counter").textContent.includes("第 4 /"), `实际: ${$("study-counter").textContent}`);
+}
+
 console.log(`\n结果：${passed} 通过，${failed} 失败`);
 process.exit(failed ? 1 : 0);

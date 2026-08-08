@@ -340,6 +340,7 @@ body {
 }
 .audio-btn:active { transform: scale(.92); }
 .audio-btn.small { width: 34px; height: 34px; font-size: 15px; }
+.audio-btn[hidden] { display: none; } /* 修复 display:inline-flex 覆盖 hidden */
 .card-back-top { display: flex; align-items: center; justify-content: space-between; }
 .audio-btn-back { width: 36px; height: 36px; font-size: 16px; }
 

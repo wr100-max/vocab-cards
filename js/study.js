@@ -246,14 +246,24 @@ function spellConfirm() {
   if (state.quizAnswer.length < 2) return;
   const correct = judge(state.quiz, state.quizAnswer);
   const ans = $("quiz-spell-answer");
-  ans.classList.add(correct ? "correct" : "wrong");
-  if (!correct) {
+  if (correct) {
+    ans.classList.add("correct");
+  } else {
+    ans.classList.add("wrong");
     ans.textContent = `${state.quizAnswer} → ${state.quiz.target}`;
   }
   showFeedback(correct, state.quiz.target);
   if (correct) {
-    setTimeout(() => finishQuiz("know"), 700);
+    setTimeout(() => finishQuiz("know"), 1100); // 留出看清"✓ 正确"反馈的时间
   }
+}
+
+/** 跳过拼写题（视为不认识，进入复习队列） */
+export function spellSkip() {
+  const ans = $("quiz-spell-answer");
+  ans.classList.add("wrong");
+  ans.textContent = `→ ${state.quiz.target}`;
+  showFeedback(false, state.quiz.target);
 }
 
 /** 清除拼写（重置字母块） */
